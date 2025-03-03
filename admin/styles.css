@@ -1,0 +1,282 @@
+/* Загальні стилі */
+:root {
+  --primary-color: #1a73e8;
+  --secondary-color: #4285f4;
+  --background-dark: #1e1e1e;
+  --text-light: #ffffff;
+  --text-dark: #333333;
+  --border-color: #2d2d2d;
+  --success-color: #28a745;
+  --error-color: #dc3545;
+  --warning-color: #ffc107;
+}
+
+body.dark-theme {
+  background-color: var(--background-dark);
+  color: var(--text-light);
+  font-family: "Segoe UI", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Шапка */
+.admin-header {
+  background-color: #2d2d2d;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.connections-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #363636;
+  border-radius: 4px;
+}
+
+.search-box input {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: #363636;
+  color: var(--text-light);
+}
+
+.sound-toggle {
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 4px;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+/* Основний контент */
+.admin-container {
+  display: flex;
+  padding: 1rem;
+  gap: 1rem;
+  height: calc(100vh - 80px);
+}
+
+.main-content {
+  flex: 1;
+  overflow: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.data-table th,
+.data-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+  background-color: #363636;
+  font-weight: 600;
+}
+
+.data-table tr:hover {
+  background-color: #363636;
+}
+
+/* Кнопки дій */
+.action-btn {
+  padding: 0.5rem 1rem;
+  margin: 0 0.25rem;
+  border: none;
+  border-radius: 4px;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.action-btn.show-otp {
+  background-color: var(--primary-color);
+}
+
+.action-btn.reject {
+  background-color: var(--error-color);
+}
+
+.action-btn.new-card {
+  background-color: var(--warning-color);
+  color: var(--text-dark);
+}
+
+/* Чат */
+.chat-container {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 1rem;
+  background-color: #363636;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chat-message {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  max-width: 80%;
+}
+
+.chat-message.admin {
+  background-color: var(--primary-color);
+  align-self: flex-end;
+}
+
+.chat-message.user {
+  background-color: #363636;
+  align-self: flex-start;
+}
+
+.chat-input {
+  padding: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: #363636;
+  color: var(--text-light);
+}
+
+.chat-input button {
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 4px;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+/* Модальне вікно */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #2d2d2d;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.modal textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  background-color: #363636;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-light);
+  resize: vertical;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.modal-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+.modal-button:not(.cancel) {
+  background-color: var(--primary-color);
+}
+
+.modal-button.cancel {
+  background-color: var(--error-color);
+}
+
+/* Нотифікації */
+.notification-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 1rem;
+  background-color: #363636;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: slideIn 0.3s ease-out;
+  z-index: 1000;
+}
+
+.notification-icon {
+  font-size: 1.2rem;
+}
+
+.notification-close {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 0 0.5rem;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
