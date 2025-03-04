@@ -165,3 +165,117 @@
 {"level":"info","message":"Защищенное WebSocket подключение закрыто"}
 {"level":"info","message":"Новое защищенное WebSocket подключение"}
 {"level":"info","message":"Сервер запущен на порту 3000","timestamp":"2025-03-04T18:46:49.589Z"}
+{"level":"info","message":"Сервер запущен на порту 3000","timestamp":"2025-03-04T22:06:22.934Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/qr/1","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T22:06:24.886Z"}
+{"level":"warn","message":"QR code not found for site: 1","timestamp":"2025-03-04T22:06:24.888Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/qr/3","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T22:06:24.917Z"}
+{"level":"warn","message":"QR code not found for site: 3","timestamp":"2025-03-04T22:06:24.918Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/qr/2","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T22:06:24.921Z"}
+{"level":"warn","message":"QR code not found for site: 2","timestamp":"2025-03-04T22:06:24.922Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T22:06:25.139Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:06:25.152Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/qr/1","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T22:06:31.756Z"}
+{"level":"warn","message":"QR code not found for site: 1","timestamp":"2025-03-04T22:06:31.760Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/qr/2","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T22:06:31.783Z"}
+{"level":"warn","message":"QR code not found for site: 2","timestamp":"2025-03-04T22:06:31.784Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/qr/3","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T22:06:31.801Z"}
+{"level":"warn","message":"QR code not found for site: 3","timestamp":"2025-03-04T22:06:31.802Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:07:50.484Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:12:15.387Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:12:15.668Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:12:16.889Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:12:17.166Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:12:18.124Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:12:18.414Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:13:25.825Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:13:26.098Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:18:55.361Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:18:55.638Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:26:11.450Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:26:11.821Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:26:13.435Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:26:13.720Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:27:48.576Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:27:48.904Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:27:50.097Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:27:50.425Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T22:27:57.040Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:29:17.055Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:29:17.472Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:29:18.633Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:29:18.997Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:32:43.485Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:32:43.775Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:33:44.679Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:33:44.986Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:42:29.976Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:42:30.253Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:44:07.702Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:44:07.974Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:44:08.897Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:44:09.236Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:44:10.021Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:44:10.469Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:44:11.139Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:44:11.815Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:49:05.380Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:49:05.681Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:57:51.536Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:57:51.824Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:57:52.984Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:57:53.257Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T22:58:40.581Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T22:58:40.866Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T23:00:55.594Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:00:55.846Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T23:00:57.339Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:00:57.577Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T23:00:58.421Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:00:58.703Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T23:00:59.566Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:00:59.930Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T23:01:00.728Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:01:01.246Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T23:01:03.030Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:01:03.677Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T23:01:11.098Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:01:11.543Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T23:01:13.741Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:01:14.279Z"}
+{"level":"info","message":"Сервер запущен на порту 3000","timestamp":"2025-03-04T23:26:45.861Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:26:51.649Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T23:27:34.692Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/qr/1","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T23:27:35.214Z"}
+{"level":"warn","message":"QR code not found for site: 1","timestamp":"2025-03-04T23:27:35.216Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/qr/3","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T23:27:35.253Z"}
+{"level":"warn","message":"QR code not found for site: 3","timestamp":"2025-03-04T23:27:35.255Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/qr/2","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T23:27:35.260Z"}
+{"level":"warn","message":"QR code not found for site: 2","timestamp":"2025-03-04T23:27:35.261Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T23:27:35.303Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:27:35.310Z"}
+{"level":"info","message":"Сервер запущен на порту 3000","timestamp":"2025-03-04T23:31:17.577Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:31:17.761Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T23:31:18.237Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/qr/1","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T23:31:18.527Z"}
+{"level":"warn","message":"QR code not found for site: 1","timestamp":"2025-03-04T23:31:18.533Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/qr/3","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T23:31:18.609Z"}
+{"level":"warn","message":"QR code not found for site: 3","timestamp":"2025-03-04T23:31:18.610Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/qr/2","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T23:31:18.640Z"}
+{"level":"warn","message":"QR code not found for site: 2","timestamp":"2025-03-04T23:31:18.643Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:31:18.789Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T23:31:18.910Z"}
+{"level":"info","message":"Сервер запущен на порту 3000","timestamp":"2025-03-04T23:35:58.052Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/csrf-token","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T23:36:48.577Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:36:48.586Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T23:42:06.348Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:42:06.616Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/csrf-token","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T23:42:06.619Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T23:49:38.326Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/csrf-token","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T23:49:38.572Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:49:38.575Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T23:49:40.103Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/csrf-token","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T23:49:40.378Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:49:40.382Z"}
+{"level":"info","message":"Client disconnected","timestamp":"2025-03-04T23:49:41.253Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","path":"/csrf-token","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"},"timestamp":"2025-03-04T23:49:41.557Z"}
+{"level":"info","message":"New client connected","timestamp":"2025-03-04T23:49:41.562Z"}

@@ -4,6 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' wss: https:;">
     <title>Admin Panel</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -36,20 +40,29 @@
                     <div class="qr-section">
                         <h3>Site 1 QR Code</h3>
                         <img id="qr1" src="/qr/1" alt="QR Code 1" onerror="this.src='placeholder.png'">
-                        <input type="file" id="qr1Upload" accept="image/*">
-                        <button onclick="uploadQR(1)">Upload New QR</button>
+                        <form id="qrForm1" onsubmit="event.preventDefault(); uploadQR(1);">
+                            <input type="hidden" name="_csrf" value="">
+                            <input type="file" id="qr1Upload" name="qrCode" accept="image/*" required>
+                            <button type="submit">Upload New QR</button>
+                        </form>
                     </div>
                     <div class="qr-section">
                         <h3>Site 2 QR Code</h3>
                         <img id="qr2" src="/qr/2" alt="QR Code 2" onerror="this.src='placeholder.png'">
-                        <input type="file" id="qr2Upload" accept="image/*">
-                        <button onclick="uploadQR(2)">Upload New QR</button>
+                        <form id="qrForm2" onsubmit="event.preventDefault(); uploadQR(2);">
+                            <input type="hidden" name="_csrf" value="">
+                            <input type="file" id="qr2Upload" name="qrCode" accept="image/*" required>
+                            <button type="submit">Upload New QR</button>
+                        </form>
                     </div>
                     <div class="qr-section">
                         <h3>Site 3 QR Code</h3>
                         <img id="qr3" src="/qr/3" alt="QR Code 3" onerror="this.src='placeholder.png'">
-                        <input type="file" id="qr3Upload" accept="image/*">
-                        <button onclick="uploadQR(3)">Upload New QR</button>
+                        <form id="qrForm3" onsubmit="event.preventDefault(); uploadQR(3);">
+                            <input type="hidden" name="_csrf" value="">
+                            <input type="file" id="qr3Upload" name="qrCode" accept="image/*" required>
+                            <button type="submit">Upload New QR</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -76,6 +89,7 @@
         </table>
     </div>
 
+    <script src="/socket.io/socket.io.js"></script>
     <script src="admin.js"></script>
 </body>
 

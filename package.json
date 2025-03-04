@@ -1,4 +1,12 @@
 {
+  "name": "payment-website",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch"
+  },
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "csurf": "^1.10.0",
@@ -16,5 +24,9 @@
     "cors": "^2.8.5",
     "express-session": "^1.18.0",
     "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
   }
 }
