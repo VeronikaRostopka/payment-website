@@ -164,3 +164,4 @@
 {"level":"info","message":"Новое защищенное WebSocket подключение"}
 {"level":"info","message":"Защищенное WebSocket подключение закрыто"}
 {"level":"info","message":"Новое защищенное WebSocket подключение"}
+{"level":"info","message":"Сервер запущен на порту 3000","timestamp":"2025-03-04T18:46:49.589Z"}

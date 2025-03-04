@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>QR Code Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
+</head>
+
+<body>
+    <canvas id="qr1"></canvas>
+    <canvas id="qr2"></canvas>
+    <canvas id="qr3"></canvas>
+
+    <script>
+        const sites = [
+            { id: 'qr1', url: 'https://localhost:3000/payment1' },
+            { id: 'qr2', url: 'https://localhost:3000/payment2' },
+            { id: 'qr3', url: 'https://localhost:3000/payment3' }
+        ];
+
+        sites.forEach(site => {
+            QRCode.toCanvas(document.getElementById(site.id), site.url, {
+                width: 300,
+                margin: 1,
+                color: {
+                    dark: '#000000',
+                    light: '#ffffff'
+                }
+            }, function (error) {
+                if (error) console.error(error);
+                console.log('QR code generated for ' + site.url);
+            });
+        });
+    </script>
+</body>
+
+</html>
