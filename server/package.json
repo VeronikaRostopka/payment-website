@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -27,5 +30,11 @@
     "sqlite3": "^5.1.7",
     "winston": "^3.17.0",
     "xss": "^1.0.15"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "puppeteer": "^21.7.0",
+    "socket.io-client": "^4.8.1",
+    "supertest": "^7.0.0"
   }
 }
