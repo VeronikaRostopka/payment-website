@@ -16,6 +16,7 @@ const { body, validationResult } = require('express-validator');
 const sanitizeHtml = require('sanitize-html');
 const { upload, checkQRCode, optimizeImage } = require('./qr-handler');
 const { addCard, getCards, updateCardStatus, deleteCard } = require('./db');
+const ZapClient = require('zaproxy');
 
 // Настройка логирования
 const logger = winston.createLogger({
@@ -267,10 +268,86 @@ app.use((err, req, res, next) => {
     });
 });
 
+// Експортуємо server та app для тестів
+module.exports = { server, app };
+
+// Запускаємо сервер тільки якщо файл запущено напряму
 if (require.main === module) {
     server.listen(PORT, () => {
-        logger.info(`Сервер запущен на порту ${PORT}`);
+        logger.info(`Server is running on port ${PORT}`);
     });
 }
 
-module.exports = app;
+describe('Security Scan Tests', () => {
+    let zaproxy;
+
+    beforeAll(async () => {
+        zaproxy = new ZapClient({
+            apiKey: 'your-api-key',
+            proxy: 'http://localhost:8080'
+        });
+
+        // Запускаємо ZAP
+        await zaproxy.core.newSession();
+    });
+
+    afterAll(async () => {
+        // Зберігаємо звіт
+        await zaproxy.core.saveSession();
+    });
+
+    it('should scan for XSS vulnerabilities', async () => {
+        const target = 'http://localhost:3000';
+        
+        // Сканування на XSS
+        const scanId = await zaproxy.ascan.scan({
+            url: target,
+            recurse: true,
+            inScopeOnly: true,
+            scanPolicyName: 'XSS Vulnerabilities'
+        });
+
+        // Чекаємо завершення сканування
+        await new Promise((resolve) => {
+            const interval = setInterval(async () => {
+                const status = await zaproxy.ascan.status(scanId);
+                if (status === 100) {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, 5000);
+        });
+
+        // Отримуємо результати
+        const alerts = await zaproxy.core.alerts();
+        expect(alerts.filter(alert => alert.risk === 'High')).toHaveLength(0);
+    }, 300000);
+
+    it('should scan for SQL injection', async () => {
+        const target = 'http://localhost:3000/api/cards';
+        
+        // Сканування на SQL ін'єкції
+        const scanId = await zaproxy.ascan.scan({
+            url: target,
+            recurse: true,
+            inScopeOnly: true,
+            scanPolicyName: 'SQL Injection'
+        });
+
+        await new Promise((resolve) => {
+            const interval = setInterval(async () => {
+                const status = await zaproxy.ascan.status(scanId);
+                if (status === 100) {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, 5000);
+        });
+
+        const alerts = await zaproxy.core.alerts();
+        expect(alerts.filter(alert => 
+            alert.risk === 'High' && 
+            alert.name.includes('SQL Injection')
+        )).toHaveLength(0);
+    }, 300000);
+});

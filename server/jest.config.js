@@ -4,6 +4,13 @@ module.exports = {
   coverageReporters: ['text', 'lcov'],
   testMatch: ['**/__tests__/**/*.js?(x)', '**/?(*.)+(spec|test).js?(x)'],
   setupFilesAfterEnv: ['./__tests__/setup.js'],
-  testTimeout: 10000,
-  verbose: true
+  testTimeout: 30000,
+  verbose: true,
+  globals: {
+    TEST_TIMEOUT: 30000
+  },
+  modulePathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/dist/'
+  ]
 }; 

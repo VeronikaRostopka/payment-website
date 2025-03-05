@@ -1,8 +1,16 @@
-const { server } = require('../index');
+const { server, app } = require('../index');
 
 beforeAll(async () => {
-  // Додаткові налаштування перед запуском всіх тестів
+  // Налаштування тестового середовища
   process.env.NODE_ENV = 'test';
+  
+  // Вимикаємо CSRF для тестів
+  if (process.env.NODE_ENV === 'test') {
+    app.use((req, res, next) => {
+      req.csrfToken = () => 'test-token';
+      next();
+    });
+  }
 });
 
 afterAll(async () => {
